@@ -39,11 +39,22 @@ import { useState } from "react";
 
 function App() {
   const [data, setData] = useState("");
+  const [error, setError] = useState("");
 
   const callApi = async () => {
-    const res = await fetch("http://localhost:5001/api");
-    const json = await res.json();
-    setData(json.message);
+    setError("");
+    setData("");
+    try {
+      const apiBase =
+        import.meta.env.VITE_API_URL ||
+        `http://${window.location.hostname}:5001`;
+      const res = await fetch(`${apiBase}/api`);
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      const json = await res.json();
+      setData(json.message);
+    } catch (err) {
+      setError(err.message || "Failed to reach backend");
+    }
   };
 
   return (
@@ -51,6 +62,7 @@ function App() {
       <h1>React + Vite + Docker 🐳</h1>
       <button onClick={callApi}>Call Backend</button>
       <p>{data}</p>
+      <p style={{ color: "red" }}>{error}</p>
     </div>
   );
 }
