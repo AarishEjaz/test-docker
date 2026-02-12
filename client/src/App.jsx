@@ -47,7 +47,7 @@ function App() {
     try {
       const apiBase =
         import.meta.env.VITE_API_URL ||
-        `http://${window.location.hostname}:5001`;
+        'http://72.62.228.211:5001';
       const res = await fetch(`${apiBase}/api`);
       if (!res.ok) throw new Error(`Request failed: ${res.status}`);
       const json = await res.json();
